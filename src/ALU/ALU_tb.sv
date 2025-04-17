@@ -9,7 +9,7 @@ module ALU_tb;
     wire [31:0] c_num_o;
     wire zero_o;
 
-    ALU uut (
+    ALU alu (
         .alu_control_op_i(alu_control_op_i),
         .a_num_i(a_num_i),
         .b_num_i(b_num_i),

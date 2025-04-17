@@ -9,7 +9,7 @@ module Controller
        output logic         MemtoReg_o,
        output logic         ALUSrc_o
 );
-    reg [7:0] controls;
+    logic [7:0] controls;
     assign {ALUSrc_o, MemtoReg_o, RegWrite_o, MemRead_o, MemWrite_o, Branch_o, ALU_op_o[1], ALU_op_o[0]} = controls;
     // I did not simplify the truth table mapping opcode controls because I plan to implement more instructions later on
     always_comb begin

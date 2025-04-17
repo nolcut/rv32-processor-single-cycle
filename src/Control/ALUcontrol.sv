@@ -1,7 +1,7 @@
 module ALUcontrol
 (
     input wire [1:0] alu_op_i,
-    input wire funct_7_op_i, // we only need the second bit in the funct 7 op to determine ALU operation type
+    input wire funct7_op_i, // we only need the second bit in the funct 7 op to determine ALU operation type
     input wire [2:0] funct3_op_i,
     output logic [3:0] alu_control_op_o
 );
@@ -11,7 +11,7 @@ module ALUcontrol
             2'b00: alu_control_op_o = 4'b0010;
             2'b01: alu_control_op_o = 4'b0110; 
             2'b10: begin // an ALUOp of 2'b10 indicates an R-type instruction, so funct7 and funct3 are needed to determine ALU action
-                if(funct_7_op_i == 1'b1) begin
+                if(funct7_op_i == 1'b1) begin
                     alu_control_op_o = 4'b0110;
                 end else begin
                     case (funct3_op_i)

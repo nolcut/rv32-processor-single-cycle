@@ -1,6 +1,6 @@
 module ImmGen 
 (
-    input wire [31:0] instruction_i,
+    input wire [31:0]   instruction_i,
     output logic [31:0] immediate_o
 );
 
