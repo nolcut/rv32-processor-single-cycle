@@ -10,7 +10,8 @@ module InstructionMemory #(
 
     logic [31:0] mem_rom[0:PROGRAM_LENGTH-1];
 
-    assign instruction_o = mem_rom[read_address_i];
+    // asynchronous reads
+    assign instruction_o = mem_rom[read_address_i / 4];
     
     // load program from memory
     initial begin
