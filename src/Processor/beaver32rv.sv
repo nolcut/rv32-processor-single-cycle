@@ -1,17 +1,19 @@
-module beaver32rv (
+module beaver32rv #(
+     parameter MEM_WIDTH = 8
+)(
     input wire clk,
     input wire rst
 );
-    logic Branch, MemRead, MemtoReg, MemWrite, ALUSrc, RegWrite, Zero;
-    logic [3:0] ALU_control_op;
-    logic [1:0] ALUOp;
-    logic [31:0] register_data1, register_data2, immediate, read_data;
-    logic [31:0] write_data, next_instruction, pc_addr, ALU_IN2, ALU_OUT, instruction;
-    
+        logic Branch, MemRead, MemtoReg, MemWrite, ALUSrc, RegWrite, Zero;
+        logic [3:0] ALU_control_op;
+        logic [1:0] ALUOp;
+        logic [31:0] register_data1, register_data2, immediate, read_data;
+        logic [31:0] write_data, next_address, pc_addr, ALU_IN2, ALU_OUT, instruction;
+
     ProgramCounter pc (
         .rst(rst),
         .clk(clk), 
-        .next_instruction_i(next_instruction), 
+        .next_address_i(next_address), 
         .address_o(pc_addr)
         );
     
@@ -21,11 +23,27 @@ module beaver32rv (
         .instruction_o(instruction)
     );
 
+    Controller control (
+        .opcode_i(instruction[6:0]),
+        .Branch_o(Branch),
+        .MemRead_o(MemRead),
+        .MemtoReg_o(MemtoReg),
+        .ALU_op_o(ALUOp),
+        .MemWrite_o(MemWrite),
+        .ALUSrc_o(ALUSrc),
+        .RegWrite_o(RegWrite)
+    );
+
     ALUcontrol alu_control (
         .alu_op_i(ALUOp),
         .funct7_op_i(instruction[30]),
         .funct3_op_i(instruction[14:12]),
         .alu_control_op_o(ALU_control_op)
+    );
+
+    ImmGen imm_gen (
+        .instruction_i(instruction),
+        .immediate_o(immediate)
     );
 
     RegisterFile rf (
@@ -56,15 +74,15 @@ module beaver32rv (
     );
 
     MUX2 select_next_instruction (
-        .A_i(instruction + immediate),
-        .B_i(instruction + 4),
+        .A_i(pc_addr + immediate),
+        .B_i(pc_addr + 4),
         .s_i(Branch && Zero),
-        .C_o(next_instruction)
+        .C_o(next_address)
     );
 
     DataMemory data_mem (
         .clk(clk),
-        .address_i(ALU_OUT),
+        .address_i(ALU_OUT[MEM_WIDTH-1:0]),
         .write_data_i(register_data2),
         .MemWrite_i(MemWrite),
         .MemRead_i(MemRead),

@@ -3,15 +3,15 @@ module ProgramCounter #(
 )(
     input wire rst,
     input wire clk,
-    input wire [DATA_WIDTH-1:0] next_instruction_i,
+    input wire [DATA_WIDTH-1:0] next_address_i,
     output logic [DATA_WIDTH-1:0] address_o
 );
 
-    always_ff @(posedge clk or posedge rst) begin
+    always_ff @(posedge clk) begin
         if (rst)
             address_o <= 32'b0;
         else
-            address_o <= next_instruction_i;
+            address_o <= next_address_i;
     end
 
 endmodule

@@ -1,7 +1,7 @@
 module Controller 
 (
        input wire [6:0]     opcode_i,
-       output logic [2:0]   ALU_op_o,
+       output logic [1:0]   ALU_op_o,
        output logic         Branch_o,
        output logic         MemWrite_o,
        output logic         MemRead_o,

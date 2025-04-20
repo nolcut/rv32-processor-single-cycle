@@ -23,8 +23,8 @@ module RegisterFile #(
     always_ff @(posedge clk or posedge rst) begin
         if (rst) begin
             for (int i = 0; i < 32; i++)
-                registers[i] = 32'b0;       
-        end else if(RegWrite_i == 1'b1 && register1_addr_i != '0) begin
+                registers[i] <= i;       
+        end else if(RegWrite_i == 1'b1 && write_addr_i != '0) begin
             // by convention x0 should be 0
             registers[write_addr_i] <= write_data_i;
         end

@@ -15,7 +15,11 @@ module ALU
             4'b0110: c_num_o = a_num_i - b_num_i;
             default: c_num_o = 32'bx;
         endcase
-        zero_o = (c_num_o == 0);
+        if (c_num_o == 0) begin
+            zero_o = 1;
+        end else begin
+            zero_o = 0;
+        end
     end
     
 endmodule
