@@ -13,7 +13,7 @@ module RegisterFile #(
     output reg [DATA_WIDTH-1:0] register_data2_o
 ); 
 
-    logic [31:0] registers [0:31];
+    logic signed [31:0] registers [0:31];
 
     // asynchronous reads
     assign register_data1_o = registers[register1_addr_i];
@@ -23,7 +23,7 @@ module RegisterFile #(
     always_ff @(posedge clk or posedge rst) begin
         if (rst) begin
             for (int i = 0; i < 32; i++)
-                registers[i] <= i;       
+                registers[i] <= 0;       
         end else if(RegWrite_i == 1'b1 && write_addr_i != '0) begin
             // by convention x0 should be 0
             registers[write_addr_i] <= write_data_i;

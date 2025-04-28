@@ -15,6 +15,7 @@ module Controller
     always_comb begin
         case (opcode_i)
             7'b0110011: controls = 8'b00100010; // R-format
+            7'b0010011: controls = 8'b10100011; // I-type arithmetic
             7'b0000011: controls = 8'b11110000; // lw-format
             7'b0100011: controls = 8'b1x001000; // sw-format
             7'b1100011: controls = 8'b0x000101; // sb-format

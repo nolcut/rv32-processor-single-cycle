@@ -1,7 +1,7 @@
 module ALUcontrol
 (
     input wire [1:0] alu_op_i,
-    input wire funct7_op_i, // we only need the second bit in the funct 7 op to determine ALU operation type
+    input wire funct7_op_i,
     input wire [2:0] funct3_op_i,
     output logic [3:0] alu_control_op_o
 );
@@ -22,6 +22,7 @@ module ALUcontrol
                     endcase
                 end
             end
+            2'b11: alu_control_op_o = 4'b0010;
         endcase
     end
 

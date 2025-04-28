@@ -10,14 +10,15 @@ module DataMemory #(
     output logic [DATA_WIDTH-1:0]   data_read_o
 );
 
-// to-do: implement data memory
-    logic [DATA_WIDTH-1:0] mem [0:(2**ADDR_WIDTH)-1];
+    logic signed [DATA_WIDTH-1:0] mem [0:(2**ADDR_WIDTH)-1];
 
     assign data_read_o = mem[address_i / 4];
 
     initial begin 
         for (int i = 0; i < 2**ADDR_WIDTH; i++)
             mem[i] = DATA_WIDTH'(i) * 4;
+        mem[0] = 410; // setting input 1 for multiply
+        mem[1] = 236; // setting input 2 for multiply
     end
 
     always_ff @(posedge clk) begin
