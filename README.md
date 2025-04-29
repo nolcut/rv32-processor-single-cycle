@@ -11,12 +11,20 @@ To change the inputs, edit the mem[0] and mem[1] assignments in the DataMemory.s
 Instructions tested:
 * add
 * sub
-* addi
 * or
 * and
+* xor
 * lw
 * sw
 * beq
+* bne
+* blt 
+* bge
+* sll
+* srl
+* sra
+* addi
+
 
 ## Installing Icarus
 **Brew install:** brew install icarus-verilog  

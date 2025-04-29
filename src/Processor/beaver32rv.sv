@@ -4,11 +4,11 @@ module beaver32rv #(
     input wire clk,
     input wire rst
 );
-        logic Branch, MemRead, MemtoReg, MemWrite, ALUSrc, RegWrite, Zero;
+        logic MemRead, MemtoReg, MemWrite, ALUSrc, RegWrite, Branch, Zero, Negative, Taken;
         logic [3:0] ALU_control_op;
         logic [1:0] ALUOp;
-        logic [31:0] register_data1, register_data2, immediate, read_data;
-        logic [31:0] write_data, next_address, pc_addr, ALU_IN2, ALU_OUT, instruction;
+        logic [31:0] next_address, pc_addr, instruction;
+        logic [31:0] register_data1, register_data2, immediate, read_data, ALU_IN2, ALU_OUT, write_data;
 
     ProgramCounter pc (
         .rst(rst),
@@ -32,6 +32,13 @@ module beaver32rv #(
         .MemWrite_o(MemWrite),
         .ALUSrc_o(ALUSrc),
         .RegWrite_o(RegWrite)
+    );
+
+    TakeBranch branch_control (
+        .negative_i(Negative),
+        .zero_i(Zero),
+        .funct3_i(instruction[14:12]),
+        .taken_o(Taken)
     );
 
     ALUcontrol alu_control (
@@ -70,13 +77,14 @@ module beaver32rv #(
         .b_num_i(ALU_IN2),
         .alu_control_op_i(ALU_control_op),
         .c_num_o(ALU_OUT),
-        .zero_o(Zero)
+        .zero_o(Zero),
+        .negative_o(Negative)
     );
 
     MUX2 select_next_instruction (
         .A_i(pc_addr + immediate),
         .B_i(pc_addr + 4),
-        .s_i(Branch && Zero),
+        .s_i(Branch && Taken),
         .C_o(next_address)
     );
 

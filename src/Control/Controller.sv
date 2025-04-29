@@ -14,11 +14,11 @@ module Controller
     // I did not simplify the truth table mapping opcode controls because I plan to implement more instructions later on
     always_comb begin
         case (opcode_i)
-            7'b0110011: controls = 8'b00100010; // R-format
-            7'b0010011: controls = 8'b10100011; // I-type arithmetic
-            7'b0000011: controls = 8'b11110000; // lw-format
-            7'b0100011: controls = 8'b1x001000; // sw-format
-            7'b1100011: controls = 8'b0x000101; // sb-format
+            7'b0110011: controls = 8'b00100010; // R-format (alu op: 10)
+            7'b0010011: controls = 8'b10100011; // I-type (alu op: 11)
+            7'b0000011: controls = 8'b11110000; // lw-format (alu op: 00)
+            7'b0100011: controls = 8'b1x001000; // sw-format (alu op: 00)
+            7'b1100011: controls = 8'b0x000101; // branch-format (alu op: 01)
             default: controls = 8'bx;
         endcase
     end

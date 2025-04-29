@@ -7,7 +7,10 @@ module beaver32rv_tb;
         .rst(rst)
     );
 
+    int cycle;
+
     initial begin
+        cycle = 0;
         rst = 1;
         #1
         clk = 1;
@@ -16,7 +19,8 @@ module beaver32rv_tb;
         #1
         rst = 0;
         #1
-        repeat(1500) begin
+        repeat(7800) begin
+            cycle += 1;
             clk = 1;
             #1;
             clk = 0;
@@ -24,19 +28,18 @@ module beaver32rv_tb;
         end
     end
 
-
     logic BranchTaken;
-    assign BranchTaken = dut.Zero && dut.Branch;
+    assign BranchTaken = dut.Taken;
 
 
     initial begin 
 
         $timeformat(-9, 1, " ns", 8);
         $monitor(
-            "pc_addr=%d reg_write_data=%d zero=%b branch=%b BranchTaken=%b clk=%b ALUOp=%b rst=%b pc_rst=%b",
-            dut.pc_addr, dut.write_data, dut.Zero, dut.Branch, BranchTaken, clk, dut.ALUOp, dut.rst, dut.pc.rst,
-            "\ninstruction=%b ALU_out=%b reg_write_addr=%b RegWrite=%b \nimmediate=%b MemtoReg=%b DataRead=%b ALU_control_op=%b\n", 
-            dut.instruction, dut.ALU_OUT, dut.instruction[11:7], dut.RegWrite, dut.immediate, dut.MemtoReg, dut.read_data, dut.ALU_control_op,
+            "pc_addr=%d reg_write_data=%d Zero=%b Branch=%b BranchTaken=%b ALUOp=%b ALU_control_op=%b rst=%b clk=%b",
+            dut.pc_addr, dut.write_data, dut.Zero, dut.Branch, BranchTaken, dut.ALUOp, dut.ALU_control_op, dut.rst, clk,
+            "\ninstruction=%b ALU_out=%b reg_write_addr=%b RegWrite=%b \nimmediate=%b MemtoReg=%b DataRead=%b cycle=%d\n", 
+            dut.instruction, dut.ALU_OUT, dut.instruction[11:7], dut.RegWrite, dut.immediate, dut.MemtoReg, dut.read_data, cycle,
             "\n x0=%d  x1=%d  x2=%d  x3=%d  x4=%d\n",
             dut.rf.registers[0], dut.rf.registers[1], dut.rf.registers[2], dut.rf.registers[3], dut.rf.registers[4],
             " x5=%d  x6=%d  x7=%d  x8=%d  x9=%d\n",

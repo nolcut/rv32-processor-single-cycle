@@ -17,8 +17,8 @@ module DataMemory #(
     initial begin 
         for (int i = 0; i < 2**ADDR_WIDTH; i++)
             mem[i] = DATA_WIDTH'(i) * 4;
-        mem[0] = 410; // setting input 1 for multiply
-        mem[1] = 236; // setting input 2 for multiply
+        mem[0] = -3489; // setting input 1 for multiply
+        mem[1] = 2236; // setting input 2 for multiply
     end
 
     always_ff @(posedge clk) begin
