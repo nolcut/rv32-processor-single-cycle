@@ -15,7 +15,7 @@ module InstructionMemory #(
     
     // load program from memory
     initial begin
-        $readmemb("InstructionMemory/or_xor_and_test.mem",mem_rom);   
+        $readmemb("InstructionMemory/multiply_x1_x2.mem",mem_rom);   
     end
 
 
