@@ -4,9 +4,9 @@ module MUX2 #(
     input wire [INPUT_WIDTH - 1:0]      A_i,
     input wire [INPUT_WIDTH - 1:0]      B_i,
     input wire                          s_i,
-    output logic [INPUT_WIDTH-1:0]      C_o
+    output logic [INPUT_WIDTH-1:0]      out_o
 );
 
-    assign C_o = s_i ? A_i:B_i; 
+    assign out_o = s_i ? A_i:B_i; 
 
 endmodule

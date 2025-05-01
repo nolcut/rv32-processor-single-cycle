@@ -4,7 +4,7 @@
 4) addi x21, x0, 21
 5) add x20, x14, x15
 6) sub x23, x25, x21
-7) addi x30, 0, 30
+7) addi x30, x0, 30
 8) sw x30, 0(x0)
 9) addi x29, x0, 30
 10) lw x31, 4(x0)
