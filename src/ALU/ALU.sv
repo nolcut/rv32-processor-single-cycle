@@ -19,6 +19,7 @@ module ALU
             4'b0100: c_num_o = a_num_i <<  b_num_i; // shift left
             4'b0101: c_num_o = a_num_i >> b_num_i; // shift right
             4'b0111: c_num_o = a_num_i >>> b_num_i; // shift right signed
+            4'b1000: c_num_o = (a_num_i < b_num_i)?1:0;
             default: c_num_o = 32'bx;
         endcase
         // set status signals

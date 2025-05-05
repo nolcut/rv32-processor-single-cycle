@@ -29,6 +29,7 @@ module ALUcontrol
                         3'b100: alu_control_op_o = 4'b0011; // xor
                         3'b001: alu_control_op_o = 4'b0100; // sll
                         3'b101: alu_control_op_o = 4'b0101; // srl
+                        3'b010: alu_control_op_o = 4'b1000; //slt
                         default: alu_control_op_o = 4'bx;
                     endcase
                 end
@@ -40,6 +41,7 @@ module ALUcontrol
                     3'b110: alu_control_op_o = 4'b0001; // ori
                     3'b111: alu_control_op_o = 4'b0000; // andi
                     3'b001: alu_control_op_o = 4'b0100; // slli
+                    3'b010: alu_control_op_o = 4'b1000; //slti
                     3'b101: begin
                         if (funct7_op_i == 1'b1) begin
                             alu_control_op_o = 4'b0111; // srli
