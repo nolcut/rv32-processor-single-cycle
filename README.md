@@ -12,7 +12,7 @@ To change the inputs, edit the mem[0] and mem[1] assignments in the DataMemory.s
 
 Instructions tested (still need to fully validate):
 * add, sub, or, and xor
-* addi
+* addi, ori, xori
 * lw, lh, sb, sw, sh, sb
 * beq, bne, blt, bge
 * jal, jalr
