@@ -19,6 +19,10 @@ Instructions tested (still need to fully validate):
 * sll, srl, sra
 * lui, auipc
 
+## Schematic
+<img width="889" alt="image" src="https://github.com/user-attachments/assets/ef01d02a-5dc5-4020-9903-e1a822e36a56" />
+
+
 
 ## Installing Icarus
 **Brew install:** brew install icarus-verilog  
@@ -26,10 +30,10 @@ Instructions tested (still need to fully validate):
 Or [see here](https://steveicarus.github.io/iverilog/usage/installation.html)    
 
 ## To-do
-* [ ] Sys calls
 * [ ] 5-stage pipeline
 * [ ] Caching
 * [ ] Branch prediction (starting with always takes)
+* [ ] ECALL/EBREAK
 
 ## Background
 RISC-V is an open source instruction set architecture born out of Berkeley’s Parallel Computing Laboratory. As the name implies, it is a RISC (reduced instruction set computer) ISA, meaning that it only includes "simple" instructions. When programming a RISC processor, complex operations are implemented in software by combining sets of smaller instructions. This is directly opposed to CISC (complex instruction set computer) ISAs, which opt to implement more complex functionality directly in hardware. For example, Vax—which is now antiquated—included POLY, a floating point operation that evaluated the value of a polynomial. Although these complex instructions simplify the process of writing code in assembly and are more efficient in niche cases, they increase the complexity of hardware and typically make up a small fraction of total run time. To address this issue, David Patterson founded the RISC project at UC Berkeley in 1980. What his group found is that architectures with simpler instructions tended to outperform the more complex existing architectures in general purpose computing contexts. Now, over 99% of microprocessors use RISC, with the notable exception being Intel’s x86. RISC-V is a relatively recent advent, having been created in 2010. The project was founded with the goal of developing an accessible, modular opensource ISA. To achieve this modularity, all full RISC-V implementations must use the base instruction set, and additional instruction subsets for multiplication, floating point operations, atomic operations, etc can be implemented on top of it.

@@ -15,8 +15,9 @@ module DataMemory #(
     logic [1:0] segment;
     assign segment = address_i[1:0];
 
-    // asynchronous reads
+    // asynchronous reads (for now)
     always_comb begin
+        if (MemRead_i)
         case (size_i)
             2'b10: data_read_o = mem[address_i >> 2];
             2'b01: begin
