@@ -12,8 +12,8 @@ module ALUcontrol
     // alu_op 11: use funct3 to determine operation
     always_comb begin
         case (alu_op_i)
-            2'b00: alu_control_op_o = 4'b0010;
-            2'b01: alu_control_op_o = 4'b0110; 
+            2'b00: alu_control_op_o = 4'b0010; // add
+            2'b01: alu_control_op_o = 4'b0110; // sub
             2'b10: begin
                 if (funct7_op_i == 1'b1) begin
                     case (funct3_op_i)
@@ -27,13 +27,27 @@ module ALUcontrol
                         3'b111: alu_control_op_o = 4'b0000; // and
                         3'b110: alu_control_op_o = 4'b0001; // or
                         3'b100: alu_control_op_o = 4'b0011; // xor
-                        3'b001: alu_control_op_o = 4'b0100; // shift-left
-                        3'b101: alu_control_op_o = 4'b0101; // shift-right logical
+                        3'b001: alu_control_op_o = 4'b0100; // sll
+                        3'b101: alu_control_op_o = 4'b0101; // srl
                         default: alu_control_op_o = 4'bx;
                     endcase
                 end
             end
-            2'b11: alu_control_op_o = 4'b0010;
+            2'b11: 
+                case (funct3_op_i) 
+                    3'b000: alu_control_op_o = 4'b0010; // addi
+                    3'b100: alu_control_op_o = 4'b0011; // xori
+                    3'b110: alu_control_op_o = 4'b0001; // ori
+                    3'b111: alu_control_op_o = 4'b0000; // andi
+                    3'b001: alu_control_op_o = 4'b0100; // slli
+                    3'b101: begin
+                        if (funct7_op_i == 1'b1) begin
+                            alu_control_op_o = 4'b0111; // srli
+                        end else begin
+                            alu_control_op_o = 4'b0101; // srai
+                        end
+                    end
+                endcase
         endcase
     end
 

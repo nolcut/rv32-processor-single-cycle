@@ -14,21 +14,23 @@ module DataMemory #(
     logic signed [DATA_WIDTH-1:0] mem [0:(2**ADDR_WIDTH)-1];
     logic [1:0] segment;
     assign segment = address_i[1:0];
+
+    // asynchronous reads
     always_comb begin
         case (size_i)
             2'b10: data_read_o = mem[address_i >> 2];
             2'b01: begin
-                if (segment[1]) 
-                    data_read_o = {{16{'0}}, mem[address_i >> 2][15:0]};
+                if (segment[1]) // pick which halfword to read
+                    data_read_o = {{16{mem[address_i >> 2][31]}}, mem[address_i >> 2][31:16]};
                 else
-                    data_read_o = {{16{'0}}, mem[address_i >> 2][31:16]};
+                    data_read_o = {{16{mem[address_i >> 2][15]}}, mem[address_i >> 2][15:0]};
             end
             2'b00: begin
-                case (segment)
-                    2'b00: data_read_o = {{24{'0}}, mem[address_i >> 2][7:0]};
-                    2'b01: data_read_o = {{24{'0}}, mem[address_i >> 2][15:8]};
-                    2'b10: data_read_o = {{24{'0}}, mem[address_i >> 2][23:16]};
-                    2'b11: data_read_o = {{24{'0}}, mem[address_i >> 2][31:24]};
+                case (segment) // pick byte segment to read
+                    2'b00: data_read_o = {{24{mem[address_i >> 2][7]}}, mem[address_i >> 2][7:0]};
+                    2'b01: data_read_o = {{24{mem[address_i >> 2][15]}}, mem[address_i >> 2][15:8]};
+                    2'b10: data_read_o = {{24{mem[address_i >> 2][23]}}, mem[address_i >> 2][23:16]};
+                    2'b11: data_read_o = {{24{mem[address_i >> 2][31]}}, mem[address_i >> 2][31:24]};
                 endcase
             end
         endcase
@@ -45,14 +47,14 @@ module DataMemory #(
         if (MemWrite_i == 1)
             case (size_i)
                 2'b10: mem[address_i >> 2] <= write_data_i;
-                2'b01: begin
+                2'b01: begin // pick halfword to write
                     if (segment[1]) 
-                        mem[address_i >> 2][15:0] <= write_data_i[15:0];
-                    else
                         mem[address_i >> 2][31:16] <= write_data_i[15:0];
+                    else
+                        mem[address_i >> 2][15:0] <= write_data_i[15:0];
                 end
                 2'b00: begin
-                    case (segment)
+                    case (segment) // pick byte to write
                         2'b00: mem[address_i >> 2][7:0] <= write_data_i[7:0];
                         2'b01: mem[address_i >> 2][15:8] <= write_data_i[7:0];
                         2'b10: mem[address_i >> 2][23:16] <= write_data_i[7:0];
@@ -61,5 +63,4 @@ module DataMemory #(
                 end
             endcase
     end
-
 endmodule
