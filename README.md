@@ -21,7 +21,8 @@ Instructions tested (still need to fully validate):
 * lui, auipc
 
 ## Schematic
-<img width="889" alt="image" src="https://github.com/user-attachments/assets/edb188a3-5ece-433f-84dc-b92e8d8d6121" />
+<img width="921" alt="image" src="https://github.com/user-attachments/assets/0536fc65-8854-4815-b3dd-5dddd63f59f2" />
+
 
 
 
