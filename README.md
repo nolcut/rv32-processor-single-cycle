@@ -20,7 +20,7 @@ Instructions tested (still need to fully validate):
 * lui, auipc
 
 ## Schematic
-<img width="889" alt="image" src="https://github.com/user-attachments/assets/ef01d02a-5dc5-4020-9903-e1a822e36a56" />
+<img width="889" alt="image" src="https://github.com/user-attachments/assets/edb188a3-5ece-433f-84dc-b92e8d8d6121" />
 
 
 
