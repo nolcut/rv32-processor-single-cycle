@@ -18,7 +18,7 @@ Instructions tested (still need to fully validate):
 * jal, jalr
 * sll, srl, sra
 * slli, srli, srai
-* lui, auipc
+* lui, auipc, slt, slti
 
 ## Schematic
 <img width="921" alt="image" src="https://github.com/user-attachments/assets/0536fc65-8854-4815-b3dd-5dddd63f59f2" />
