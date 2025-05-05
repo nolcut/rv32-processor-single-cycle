@@ -1,4 +1,4 @@
-s## Basic RISC-V implementation
+## Basic RISC-V implementation
 
 To simulate, you will need Icarus Verilog (or some other SystemVerilog simulation tool). Navigate to the src directory and type in the commands:
 ```
