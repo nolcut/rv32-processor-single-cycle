@@ -9,6 +9,7 @@ module ALU
     output logic            negative_o
 );
 
+
     always_comb begin
         case (alu_control_op_i)
             4'b0000: c_num_o = a_num_i & b_num_i; // and
@@ -19,7 +20,8 @@ module ALU
             4'b0100: c_num_o = a_num_i <<  b_num_i; // shift left
             4'b0101: c_num_o = a_num_i >> b_num_i; // shift right
             4'b0111: c_num_o = a_num_i >>> b_num_i; // shift right signed
-            4'b1000: c_num_o = (a_num_i < b_num_i)?1:0;
+            4'b1000: c_num_o = (a_num_i < b_num_i)?1:0; // slt
+            4'b1010: c_num_o = ($unsigned(a_num_i) < $unsigned(b_num_i))?1:0; // sltu
             default: c_num_o = 32'bx;
         endcase
         // set status signals

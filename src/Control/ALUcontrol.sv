@@ -29,7 +29,8 @@ module ALUcontrol
                         3'b100: alu_control_op_o = 4'b0011; // xor
                         3'b001: alu_control_op_o = 4'b0100; // sll
                         3'b101: alu_control_op_o = 4'b0101; // srl
-                        3'b010: alu_control_op_o = 4'b1000; //slt
+                        3'b010: alu_control_op_o = 4'b1000; // slt
+                        3'b011: alu_control_op_o = 4'b1010; // sltu
                         default: alu_control_op_o = 4'bx;
                     endcase
                 end
@@ -49,6 +50,7 @@ module ALUcontrol
                             alu_control_op_o = 4'b0101; // srai
                         end
                     end
+                    3'b011: alu_control_op_o = 4'b1010; // sltui
                 endcase
         endcase
     end

@@ -13,12 +13,13 @@ To change the inputs, edit the mem[0] and mem[1] assignments in the DataMemory.s
 Instructions tested (still need to fully validate):
 * add, sub, or, and, xor
 * addi, ori, andi, xori
-* lw, lh, sb, sw, sh
+* lw, lh, lb, sb, sw, sh
 * beq, bne, blt, bge
 * jal, jalr
 * sll, srl, sra
 * slli, srli, srai
-* lui, auipc, slt, slti
+* slt, sltu, slti, sltiu
+* lui, auipc
 
 ## Schematic
 <img width="921" alt="image" src="https://github.com/user-attachments/assets/0536fc65-8854-4815-b3dd-5dddd63f59f2" />
