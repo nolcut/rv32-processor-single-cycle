@@ -18,7 +18,7 @@ module beaver32rv_tb;
         #1;
         rst = 0; 
         #1;
-        repeat(10) begin
+        repeat(1500) begin
             cycle += 1;
             clk = ~clk; #1;
             clk = ~clk; #1;

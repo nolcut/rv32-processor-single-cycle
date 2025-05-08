@@ -19,7 +19,7 @@ module beaver32rv #(
         assign rd = instruction[11:7];
         assign funct3 = instruction[14:12];
         assign opcode = instruction[6:0];
-        assign size = {funct3 == 3'b010, funct3 == 3'b001}; // word: 11 halfword: 01 byte: 00 -- used for byte/hw meme accesses
+        assign size = {funct3 == 3'b010, funct3 == 3'b001}; // word: 11 halfword: 01 byte: 00 -- used for byte/hw mem accesses
         assign pc_addr_plus4 = pc_addr + 4;
 
     ProgramCounter pc (
