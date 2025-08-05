@@ -16,15 +16,15 @@ throughout program execution
 <img width="1842" height="1272" alt="beaver32-schematic" src="https://github.com/user-attachments/assets/6ed8bd3a-959c-42f0-bb4a-c64ee491fddd" />  
 
 ## Instructions tested:
-* add, sub, or, and, xor
-* addi, ori, andi, xori
-* lw, lh, lb, sb, sw, sh
-* beq, bne, blt, bge
-* jal, jalr
-* sll, srl, sra
-* slli, srli, srai
-* slt, sltu, slti, sltiu
-* lui, auipc
+
+- `add`, `sub`, `or`, `and`, `xor`  
+- `addi`, `ori`, `andi`, `xori`  
+- `lw`, `lh`, `lb`, `sw`, `sh`, `sb`  
+- `beq`, `bne`, `blt`, `bge`  
+- `jal`, `jalr`  
+- `sll`, `srl`, `sra`, `slli`, `srli`, `srai`  
+- `slt`, `sltu`, `slti`, `sltiu`  
+- `lui`, `auipc`
   
 ## Built-in programs
 
@@ -58,6 +58,8 @@ Result:
     sorted_arr: mem[1:size + 1] -- sorted array
 </pre>
 
+---
+
 To run your own programs, select "Run new program" and provide the path to the program. At the moment, the processor only supports binary encoded .mem files.
 
 
@@ -68,19 +70,22 @@ To simulate using the docker container, run:
 >> docker run -it nolcut/castor32
 ```
 In order to run local programs, you need to mount your filesystem to the /rv32-script folder inside of the container using the -v flag  
-For example, to mount your current working directory, run:
+
+For example, to mount your current working directory (using a Posix shell), run:
 ```
 >> docker run -it -v $(pwd):/rv32-script nolcut/castor32
 ```
 
 ## Dependencies
-When running the wrapper.py script locally, the dependencies are:
-* icarus-verilog (system package)
-* riscv-assembler (PyPI)
+When running the wrapper.py script locally, these dependencies are required:
+* `icarus-verilog` (system package)
+* `riscv-assembler` (PyPI)
 
 ## Installing Icarus
-**Brew install:** brew install icarus-verilog  
-**Apt install:** sudo apt install iverilog   
+**Brew install:** 
+```brew install icarus-verilog```  
+**APT install:** 
+```sudo apt install iverilog```  
 Or [see here](https://steveicarus.github.io/iverilog/usage/installation.html)    
 
 ## To-do

@@ -11,6 +11,6 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 COPY SystemVerilog/ ./SystemVerilog/
-COPY wrapper.py .
+COPY sim_runner.py simulation.py .
 
-CMD ["python3", "wrapper.py"]
+CMD ["python3", "sim_runner.py"]

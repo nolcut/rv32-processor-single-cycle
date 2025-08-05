@@ -1,13 +1,13 @@
 import atexit
 import json
-import subprocess
 import sys
-import threading
 from enum import IntEnum
 from pathlib import Path
 from time import sleep
 
 from riscv_assembler.convert import AssemblyConverter
+
+from simulation import Simulation
 
 BUILTIN_PROGRAMS = {
     "multiply": "SystemVerilog/InstructionMemory/multiply_words_unconditional",
@@ -21,7 +21,7 @@ PROG_PATH = Path("SystemVerilog") / Path("InstructionMemory") / "program.mem"
 PC_PATH = Path("SystemVerilog") / Path("ProgramCounter") / "pc.txt"
 RF_PATH = Path("SystemVerilog") / Path("RegisterFile") / "reg.mem"
 
-simulation = None
+simulation = Simulation()
 
 
 class Mode(IntEnum):
@@ -31,15 +31,13 @@ class Mode(IntEnum):
 
 
 def main():
-    compile_sim()
-
     while True:
         print(
             "\nEnter mode of execution:\n"
             "1. Batch: Run an entire program\n"
             "2. Iterative: Run an entire program line by line\n"
             "3. Prompted: Manually enter instructions\n"
-            )
+        )
 
         valid_inputs = {str(Mode.BATCH), str(Mode.ITERATIVE), str(Mode.PROMPTED)}
         first_prompt = "Enter 1-3: "
@@ -47,7 +45,7 @@ def main():
 
         selection = int(get_input(valid_inputs, first_prompt, err_msg))
 
-        match(selection):
+        match (selection):
             case Mode.BATCH:
                 batch_exec()
             case Mode.ITERATIVE:
@@ -60,7 +58,7 @@ def main():
         selection = get_input(
             valid_inputs={"yes", "no"},
             first_prompt="Enter yes or no: ",
-            err_prompt="Invalid input (yes or no only): "
+            err_prompt="Invalid input (yes or no only): ",
         )
 
         if selection == "no":
@@ -70,9 +68,7 @@ def main():
 
 
 def batch_exec():
-    """
-    Runs a program from a file from start to finish
-    """
+    """Executes a program in it's entirety"""
     clear_sim_files()
     prog_name = load_program()
 
@@ -81,7 +77,7 @@ def batch_exec():
 
     print("Initializing register and memory state...")
 
-    start_sim()
+    simulation.start()
 
     pc = read_pc()
 
@@ -89,12 +85,13 @@ def batch_exec():
         run_iteration()
         pc = read_pc()
 
-    kill_sim()
+    simulation.kill()
 
     print("Program complete")
 
 
 def iterative_exec():
+    """Executes a program line by line"""
     clear_sim_files()
     prog_name = load_program()
 
@@ -103,7 +100,7 @@ def iterative_exec():
 
     print("Initializing register and memory state...")
 
-    start_sim()
+    simulation.start()
 
     pc = read_pc()
 
@@ -121,12 +118,13 @@ def iterative_exec():
                 run_iteration()
                 pc = read_pc()
 
-    kill_sim()
+    simulation.kill()
 
     print("Program complete")
 
 
 def prompted_exec():
+    """Executes instructions from STDIN"""
     assembler = AssemblyConverter()
 
     clear_sim_files()
@@ -135,7 +133,7 @@ def prompted_exec():
 
     print("Initializing register and memory state...")
 
-    start_sim()
+    simulation.start()
 
     while True:
         instruction = input("\nEnter intruction (or exit): \n")
@@ -153,7 +151,7 @@ def prompted_exec():
 
         run_iteration()
 
-    kill_sim()
+    simulation.kill()
 
     print("\nProgram ended")
 
@@ -175,77 +173,12 @@ def run_iteration():
     sleep(0.1)
 
 
-def compile_sim():
-    """Compile the simulation"""
-    # find sv files
-    sv_files = [str(p) for p in Path('.').rglob("*.sv")]
-
-    # compile
-    init_cmd = ["iverilog", "-g2012", "-o", "beaver32rv_test"] + sv_files
-
-    subprocess.run(
-        init_cmd,
-        check=True,
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-        stdin=subprocess.DEVNULL
-    )
-
-
-def start_sim():
-    """
-    Start simulation
-
-    Returns:
-        subprocess -- simulation process
-    """
-    global simulation
-
-    if simulation:
-        print(
-            "Error: Cannot start another simulation while one is already running"
-        )
-        sys.exit(1)
-
-    # run sim
-    run_cmd = ["vvp", "beaver32rv_test"]
-
-    simulation = subprocess.Popen(
-        run_cmd,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.DEVNULL,
-        stdin=subprocess.DEVNULL,
-        text=True
-    )
-
-    sleep(1)
-
-    # reads stdout of simulation
-    thread = threading.Thread(target=display_out, args=(simulation.stdout,), daemon=True)
-    thread.start()
-
-    return simulation
-
-
-def display_out(output):
-    """
-    print an io stream
-
-    Arguments:
-        output -- stdout to print from
-    """
-    for line in output:
-        if line.startswith("WARNING"):
-            continue
-        print(line, end="")
-
-
 def more_lines(line_num):
     """
-    Returns whether or not the current line number is valid
-    inside of program.mem
+    Returns whether or not the current line
+    inside of program.mem number is valid
     """
-    if line_num == 'x':
+    if line_num == "x":
         return False
     else:
         line_num = int(line_num)
@@ -265,8 +198,8 @@ def read_pc():
     """Read program counter and return it's position"""
     with open(PC_PATH, "r") as pc_file:
         val = pc_file.read().strip()
-        if val == 'x':
-            return float('inf')
+        if val == "x":
+            return float("inf")
         elif not val.isdigit():
             print("Error: PC must be digit or x")
             sys.exit(1)
@@ -277,13 +210,13 @@ def clear_data():
     """Sets data.mem entries to 0"""
 
     with open(DATA_PATH, "w") as data_file:
-        for _ in range(2 ** DATA_ADDR_WIDTH):
+        for _ in range(2**DATA_ADDR_WIDTH):
             data_file.write("0\n")
 
 
 def binary(num):
     """Returns a 32-bit two's complement binary representation of num."""
-    MIN = -2**31
+    MIN = -(2**31)
     MAX = 2**31 - 1
 
     try:
@@ -293,7 +226,7 @@ def binary(num):
             return None
         if val < 0:
             val = (1 << 32) + val  # two's complement
-        return format(val, '032b')
+        return format(val, "032b")
     except (ValueError, TypeError):
         print("Error: invalid input. Expected an integer or integer string.")
         return None
@@ -351,7 +284,7 @@ def set_init_state():
         "(otherwise, all words in memory will be initialized to 0)?"
     )
 
-    edit_state(data_msg, "word", 2 ** DATA_ADDR_WIDTH)
+    edit_state(data_msg, "word", 2**DATA_ADDR_WIDTH)
 
 
 def edit_state(msg, type, addr_range):
@@ -365,7 +298,7 @@ def edit_state(msg, type, addr_range):
     edit = get_input(
         valid_inputs={"yes", "no"},
         first_prompt="Enter yes or no: ",
-        err_prompt="Invalid input (yes or no only): "
+        err_prompt="Invalid input (yes or no only): ",
     )
 
     if edit == "yes":
@@ -379,7 +312,7 @@ def edit_state(msg, type, addr_range):
             index = get_input(
                 valid_inputs=valid_ints,
                 first_prompt=f"Enter {lowest_idx}-{addr_range - 1}: ",
-                err_prompt=f"Invalid input (0-{addr_range - 1} only): "
+                err_prompt=f"Invalid input (0-{addr_range - 1} only): ",
             )
 
             print_index = f"x{index}" if type == "register" else index
@@ -400,7 +333,7 @@ def edit_state(msg, type, addr_range):
             more_word_edits = get_input(
                 valid_inputs={"yes", "no"},
                 first_prompt="Continue editing (yes or no): ",
-                err_prompt="Invalid input (yes or no only): "
+                err_prompt="Invalid input (yes or no only): ",
             )
 
             if more_word_edits == "no":
@@ -434,11 +367,7 @@ def load_program():
     """
     clear_sim_files()
 
-    print(
-        "\nOptions:\n"
-        "1. Run saved program\n"
-        "2. Run new programs"
-    )
+    print("\nOptions:\n" "1. Run saved program\n" "2. Run new programs")
     valid_inputs = {"1", "2"}
     first_prompt = "\nEnter 1 or 2: "
     err_msg = "Invalid input (1 or 2 only): "
@@ -464,15 +393,12 @@ def load_program():
         for p in existing_progs:
             print(p)
 
-        err_prompt = (
-            "Input does not match any saved programs\n"
-            "Enter program: "
-        )
+        err_prompt = "Input does not match any saved programs\n" "Enter program: "
 
         prog_name = get_input(
             valid_inputs=existing_progs | BUILTIN_PROGRAMS.keys(),
             first_prompt="\nEnter program: ",
-            err_prompt=err_prompt
+            err_prompt=err_prompt,
         )
 
         if prog_name not in BUILTIN_PROGRAMS:
@@ -519,7 +445,7 @@ def handle_builtin(prog):
         print(f"Error: {prog} is not a builtin program")
         sys.exit(1)
 
-    match(prog):
+    match (prog):
         case "multiply":
             multiply_txt_path = Path(BUILTIN_PROGRAMS["multiply"] + ".txt")
 
@@ -591,16 +517,6 @@ def get_input(valid_inputs, first_prompt, err_prompt):
     return selection
 
 
-def kill_sim():
-    """Kills simulation if one is running"""
-    global simulation
-
-    if simulation:
-        simulation.terminate()
-
-    simulation = None
-
-
 if __name__ == "__main__":
-    atexit.register(kill_sim)
+    atexit.register(simulation.kill)
     main()
