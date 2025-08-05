@@ -49,7 +49,6 @@ Result:
 
 ### Simple sort (to-do)  
 Sorts an array in memory    
-Edit mem[0] to specify size of the array to sort.  
 <pre>
 Inputs:
     size: mem[0] -- size of array
