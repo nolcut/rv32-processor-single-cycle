@@ -15,33 +15,44 @@ module DataMemory #(
     logic [1:0] segment;
     assign segment = address_i[1:0];
 
-    // asynchronous reads (for now)
+    // asynchronous reads
     always_comb begin
-        if (MemRead_i)
-        case (size_i)
-            2'b10: data_read_o = mem[address_i >> 2];
-            2'b01: begin
-                if (segment[1]) // pick which halfword to read
-                    data_read_o = {{16{mem[address_i >> 2][31]}}, mem[address_i >> 2][31:16]};
-                else
-                    data_read_o = {{16{mem[address_i >> 2][15]}}, mem[address_i >> 2][15:0]};
-            end
-            2'b00: begin
-                case (segment) // pick byte segment to read
-                    2'b00: data_read_o = {{24{mem[address_i >> 2][7]}}, mem[address_i >> 2][7:0]};
-                    2'b01: data_read_o = {{24{mem[address_i >> 2][15]}}, mem[address_i >> 2][15:8]};
-                    2'b10: data_read_o = {{24{mem[address_i >> 2][23]}}, mem[address_i >> 2][23:16]};
-                    2'b11: data_read_o = {{24{mem[address_i >> 2][31]}}, mem[address_i >> 2][31:24]};
-                endcase
-            end
-        endcase
-    end
+        data_read_o = '0;
 
-    initial begin 
-        for (int i = 0; i < 2**ADDR_WIDTH; i++)
-            mem[i] = '0;
-        mem[0] = 25; // setting input 1 for multiply
-        mem[1] = 15; // setting input 2 for multiply
+        if (MemRead_i) begin
+            logic [DATA_WIDTH-1:0] mem_word;
+            logic [15:0] halfword;
+            logic [7:0] byte_val;
+
+            mem_word = mem[address_i >> 2];
+
+            case (size_i)
+                // word access
+                2'b10: data_read_o = mem_word;
+
+                // halfword access
+                2'b01: begin
+                    if (segment[1])
+                        halfword = mem_word[31:16];
+                    else
+                        halfword = mem_word[15:0];
+
+                    data_read_o = {{16{halfword[15]}}, halfword};
+                end
+
+                // byte access
+                2'b00: begin
+                    case (segment)
+                        2'b00: byte_val = mem_word[7:0];
+                        2'b01: byte_val = mem_word[15:8];
+                        2'b10: byte_val = mem_word[23:16];
+                        2'b11: byte_val = mem_word[31:24];
+                    endcase
+
+                    data_read_o = {{24{byte_val[7]}}, byte_val};
+                end
+            endcase
+        end
     end
 
     always_ff @(posedge clk) begin

@@ -1,6 +1,6 @@
 
 module beaver32rv #(
-     parameter MEM_WIDTH = 8
+     parameter DATA_ADDR_WIDTH = 8
 )(
     input wire clk,
     input wire rst
@@ -11,8 +11,8 @@ module beaver32rv #(
         logic [3:0] ALU_control_op;
         logic [4:0] rs1, rs2, rd;
         logic [6:0] opcode;
-        logic [31:0] next_address, pc_addr, pc_addr_plus4, instruction;
-        logic [31:0] register_data1, register_data2, immediate, read_data, read_data_shifted, ALU_IN1, ALU_IN2, ALU_OUT, branch_target, write_data;
+        logic [31:0] next_address, pc_addr_plus4, instruction;
+        logic [31:0] register_data1, register_data2, immediate, pc_addr, read_data, read_data_shifted, ALU_IN1, ALU_IN2, ALU_OUT, branch_target, write_data;
         // get register/opcode info
         assign rs1 = instruction[19:15];
         assign rs2 = instruction[24:20];
@@ -50,7 +50,6 @@ module beaver32rv #(
         .RegWrite_o(RegWrite)
     );
 
-    // figure out if branch is taken
     TakeBranch branch_control (
         .negative_i(Negative),
         .zero_i(Zero),
@@ -114,7 +113,7 @@ module beaver32rv #(
         .out_o(branch_target)
     );
 
-    MUX3 select_next_instruction (
+    MUX2 select_next_instruction (
         .A_i(branch_target),
         .B_i(pc_addr_plus4),
         .s_i(Taken || Jump || JALR),
@@ -123,7 +122,7 @@ module beaver32rv #(
 
     DataMemory data_mem (
         .clk(clk),
-        .address_i(ALU_OUT[MEM_WIDTH-1:0]),
+        .address_i(ALU_OUT[DATA_ADDR_WIDTH-1:0]),
         .write_data_i(register_data2),
         .MemWrite_i(MemWrite),
         .MemRead_i(MemRead),

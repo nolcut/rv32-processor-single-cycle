@@ -9,8 +9,8 @@ module RegisterFile #(
     input wire [ADDR_WIDTH-1:0] register2_addr_i,
     input wire [ADDR_WIDTH-1:0] write_addr_i,
     input wire [DATA_WIDTH-1:0] write_data_i,
-    output reg [DATA_WIDTH-1:0] register_data1_o,
-    output reg [DATA_WIDTH-1:0] register_data2_o
+    output logic [DATA_WIDTH-1:0] register_data1_o,
+    output logic [DATA_WIDTH-1:0] register_data2_o
 ); 
 
     logic signed [31:0] registers [0:31]; // x0-x31

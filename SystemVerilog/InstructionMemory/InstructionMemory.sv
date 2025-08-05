@@ -11,11 +11,4 @@ module InstructionMemory #(
 
     // asynchronous reads
     assign instruction_o = mem_rom[read_address_i / 4];
-    
-    // load program from memory
-    initial begin
-        $readmemb("InstructionMemory/multiply_x1_x2.mem",mem_rom);   
-    end
-
-
 endmodule
