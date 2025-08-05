@@ -439,7 +439,7 @@ def handle_builtin(prog):
         prog -- builtin function name (str)
 
     Returns:
-        str -- path to program's code
+        Path -- path to program's code
     """
     if prog not in BUILTIN_PROGRAMS:
         print(f"Error: {prog} is not a builtin program")
