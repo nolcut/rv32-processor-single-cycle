@@ -1,7 +1,7 @@
-from pathlib import Path
 from abc import ABC, abstractmethod
+
+from constants import DATA_PATH, PROG_PATH, RF_PATH, Registers, binary, get_int
 from riscv_assembler.convert import AssemblyConverter
-from constants import PROG_PATH, DATA_PATH, RF_PATH, Registers, get_int, binary
 
 
 class BuiltinProgram(ABC):
@@ -27,7 +27,7 @@ class BuiltinProgram(ABC):
             lines = "\n".join(prog_file.readlines())
 
         msg = (
-            f"============================ {self.name.upper()} ============================\n"
+            f"============================ {self.name.upper()} ============================\n"  # # noqa: E501
             f"{lines}\n\n"
         )
 
@@ -38,25 +38,29 @@ class BuiltinProgram(ABC):
         print(msg)
 
     def load(self):
-        """Prints program, prompts user for data/registers, and returns program name as a Path object"""
+        """
+        Prints program, prompts user for data/registers
+        and returns program name as a Path object
+        """
 
         self.print_prog()
 
         self.get_data()
 
         self.get_registers()
-        
+
         return self.path
-    
+
 
 class Multiply(BuiltinProgram):
     """Multiply program"""
+
     def get_data(self):
         mem0_prompt = "Enter value for mem[0]: "
         mem0_err = "\nERROR: Value must be an integer\n"
 
         mem0 = get_int(mem0_prompt, mem0_err)
-        
+
         mem1_prompt = "Enter value for mem[1]: "
         mem1_err = "\nERROR: Value must be an integer\n"
 
@@ -77,6 +81,7 @@ class Multiply(BuiltinProgram):
 
 class Fibonacci(BuiltinProgram):
     """Memoized fibonacci program"""
+
     def get_data(self):
         pass
 
@@ -98,33 +103,36 @@ class Fibonacci(BuiltinProgram):
 
 class QuickSort(BuiltinProgram):
     """Quicksort program"""
+
     def load(self):
-        """Prints program, prompts user for data/registers, and returns program name as a Path object"""
+        """
+        Prints program, prompts user for data/registers
+        and returns program name as a Path object
+        """
 
         self.print_prog()
 
         arr_size = self.get_registers()
 
         self.get_data(arr_size)
-        
+
         return self.path
 
     def get_data(self, arr_size):
-            print("\nEnter your array entries: ")
-            arr = []
-            for i in range(arr_size):
-                prompt = f"mem[{i}]: "
-                err_msg = f"\nERROR: Value for mem[{i}] must be an integer\n"
+        print("\nEnter your array entries: ")
+        for i in range(arr_size):
+            prompt = f"mem[{i}]: "
+            err_msg = f"\nERROR: Value for mem[{i}] must be an integer\n"
 
-                arr_entry = get_int(prompt, err_msg)
+            arr_entry = get_int(prompt, err_msg)
 
-                set_file_line(DATA_PATH, i, arr_entry)
+            set_file_line(DATA_PATH, i, arr_entry)
 
     def get_registers(self):
         """Get the size of the array and store in a0"""
         prompt = "Enter the size of the array to sort: "
         err_msg = "\nERROR: Value must be an integer\n"
-        
+
         arr_size = get_int(prompt, err_msg)
 
         set_file_line(RF_PATH, Registers.a2, arr_size - 1)
@@ -161,9 +169,9 @@ def create_program_file(program=None):
     with open(program, "r") as prog_file:
         code = prog_file.readlines()
 
-    if program.suffix.lower() == ".s": 
+    if program.suffix.lower() == ".s":
         assembler = AssemblyConverter()
-        
+
         code = "".join(code)
 
         code = assembler.convert(code)
@@ -171,4 +179,3 @@ def create_program_file(program=None):
     with open(PROG_PATH, "w") as prog_file:
         if program:
             prog_file.write("\n".join(code))
-

@@ -1,7 +1,8 @@
 import subprocess
-import threading
 import sys
+import threading
 from time import sleep
+
 from constants import PROCESSOR_PATH
 
 
@@ -16,7 +17,7 @@ class Simulation:
         return cls._instance
 
     def __init__(self):
-        if not hasattr(self, "_initialized"): 
+        if not hasattr(self, "_initialized"):
             self.simulation = None
             self.compiled = False
             self._initialized = True

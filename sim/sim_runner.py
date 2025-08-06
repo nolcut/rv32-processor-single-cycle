@@ -5,21 +5,10 @@ from pathlib import Path
 from time import sleep
 
 from config import BUILTIN_PROGRAMS, simulation
-
-from constants import (
-    DATA_ADDR_WIDTH,
-    DATA_PATH,
-    PROG_PATH,
-    PC_PATH,
-    RF_PATH,
-    INSTRUCTION_DELAY,
-    CONTROL_PATH,
-    PROGRAMS_FOLDER_PATH,
-    get_input
-)
-
+from constants import (CONTROL_PATH, DATA_ADDR_WIDTH, DATA_PATH,
+                       INSTRUCTION_DELAY, PC_PATH, PROG_PATH,
+                       PROGRAMS_FOLDER_PATH, RF_PATH, get_input)
 from programs import create_program_file, set_file_line
-
 from riscv_assembler.convert import AssemblyConverter
 
 
@@ -405,7 +394,7 @@ def handle_builtin(prog):
 
         case "fibonacci":
             return BUILTIN_PROGRAMS["fibonacci"].load()
-            
+
         case "quick_sort":
             return BUILTIN_PROGRAMS["quick_sort"].load()
 
