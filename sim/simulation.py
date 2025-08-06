@@ -1,8 +1,8 @@
 import subprocess
 import threading
 import sys
-from pathlib import Path
 from time import sleep
+from constants import PROCESSOR_PATH
 
 
 class Simulation:
@@ -36,12 +36,12 @@ class Simulation:
             self.compile()
 
         # run sim
-        run_cmd = ["vvp", "beaver32rv_test"]
+        run_cmd = ["vvp", "castor32rv_test"]
 
         self.simulation = subprocess.Popen(
             run_cmd,
             stdout=subprocess.PIPE,
-            stderr=subprocess.DEVNULL,
+            stderr=subprocess.STDOUT,
             stdin=subprocess.DEVNULL,
             text=True,
         )
@@ -57,10 +57,10 @@ class Simulation:
     def compile(self):
         """Compile the simulation"""
         # find sv files
-        sv_files = [str(p) for p in Path(".").rglob("*.sv")]
+        sv_files = [str(p) for p in PROCESSOR_PATH.rglob("*.sv")]
 
         # compile
-        init_cmd = ["iverilog", "-g2012", "-o", "beaver32rv_test"] + sv_files
+        init_cmd = ["iverilog", "-g2012", "-o", "castor32rv_test"] + sv_files
 
         subprocess.run(
             init_cmd,

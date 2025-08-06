@@ -1,6 +1,6 @@
 
-module beaver32rv #(
-     parameter DATA_ADDR_WIDTH = 8
+module castor32rv #(
+     parameter DATA_ADDR_WIDTH = 12
 )(
     input wire clk,
     input wire rst
@@ -120,7 +120,9 @@ module beaver32rv #(
         .out_o(next_address)
     );
 
-    DataMemory data_mem (
+    DataMemory #(
+        .ADDR_WIDTH(12)
+    ) data_mem (
         .clk(clk),
         .address_i(ALU_OUT[DATA_ADDR_WIDTH-1:0]),
         .write_data_i(register_data2),

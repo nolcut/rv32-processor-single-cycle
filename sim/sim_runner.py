@@ -1,56 +1,53 @@
 import atexit
 import json
 import sys
-from enum import IntEnum
 from pathlib import Path
 from time import sleep
 
+from config import BUILTIN_PROGRAMS, simulation
+
+from constants import (
+    DATA_ADDR_WIDTH,
+    DATA_PATH,
+    PROG_PATH,
+    PC_PATH,
+    RF_PATH,
+    INSTRUCTION_DELAY,
+    CONTROL_PATH,
+    PROGRAMS_FOLDER_PATH,
+    get_input
+)
+
+from programs import create_program_file, set_file_line
+
 from riscv_assembler.convert import AssemblyConverter
-
-from simulation import Simulation
-
-BUILTIN_PROGRAMS = {
-    "multiply": "SystemVerilog/InstructionMemory/multiply_words_unconditional",
-    "fibonacci": "TODO",
-    "simple_sort": "TODO",
-}
-DATA_ADDR_WIDTH = 8
-
-DATA_PATH = Path("SystemVerilog") / Path("DataMemory") / "data.mem"
-PROG_PATH = Path("SystemVerilog") / Path("InstructionMemory") / "program.mem"
-PC_PATH = Path("SystemVerilog") / Path("ProgramCounter") / "pc.txt"
-RF_PATH = Path("SystemVerilog") / Path("RegisterFile") / "reg.mem"
-
-simulation = Simulation()
-
-
-class Mode(IntEnum):
-    BATCH = 1
-    ITERATIVE = 2
-    PROMPTED = 3
 
 
 def main():
+    print("=" * 50)
+    print("CASTOR32".center(45))
+    print("=" * 50 + "\n")
+
     while True:
         print(
-            "\nEnter mode of execution:\n"
+            "Enter mode of execution:\n"
             "1. Batch: Run an entire program\n"
             "2. Iterative: Run an entire program line by line\n"
             "3. Prompted: Manually enter instructions\n"
         )
 
-        valid_inputs = {str(Mode.BATCH), str(Mode.ITERATIVE), str(Mode.PROMPTED)}
+        valid_inputs = {"1", "2", "3"}
         first_prompt = "Enter 1-3: "
         err_msg = "Invalid input (1-3 only): "
 
         selection = int(get_input(valid_inputs, first_prompt, err_msg))
 
         match (selection):
-            case Mode.BATCH:
+            case 1:
                 batch_exec()
-            case Mode.ITERATIVE:
+            case 2:
                 iterative_exec()
-            case Mode.PROMPTED:
+            case 3:
                 prompted_exec()
 
         print("\nWould you like to run another program?")
@@ -170,7 +167,7 @@ def add_instruction(instruction):
 def run_iteration():
     """Runs a single instruction"""
     set_control(1)
-    sleep(0.1)
+    sleep(INSTRUCTION_DELAY)
 
 
 def more_lines(line_num):
@@ -178,7 +175,7 @@ def more_lines(line_num):
     Returns whether or not the current line
     inside of program.mem number is valid
     """
-    if line_num == "x":
+    if line_num == float("inf"):
         return False
     else:
         line_num = int(line_num)
@@ -208,28 +205,9 @@ def read_pc():
 
 def clear_data():
     """Sets data.mem entries to 0"""
-
     with open(DATA_PATH, "w") as data_file:
         for _ in range(2**DATA_ADDR_WIDTH):
             data_file.write("0\n")
-
-
-def binary(num):
-    """Returns a 32-bit two's complement binary representation of num."""
-    MIN = -(2**31)
-    MAX = 2**31 - 1
-
-    try:
-        val = int(num)
-        if val < MIN or val > MAX:
-            print(f"Error: {val} is out of 32-bit signed integer bounds.")
-            return None
-        if val < 0:
-            val = (1 << 32) + val  # two's complement
-        return format(val, "032b")
-    except (ValueError, TypeError):
-        print("Error: invalid input. Expected an integer or integer string.")
-        return None
 
 
 def clear_reg():
@@ -245,20 +223,8 @@ def set_control(control):
         print("Control must only be set to 2, 1, or 0", flush=True)
         sys.exit(1)
 
-    with open("control.txt", "w") as control_file:
+    with open(CONTROL_PATH, "w") as control_file:
         control_file.write(str(control))
-
-
-def create_program_file(program=None):
-    """
-    Creates the program.mem file that the processor reads from
-
-    Arguments:
-        program: file | None -- selected user program
-    """
-    with open(PROG_PATH, "w") as prog_file:
-        if program:
-            prog_file.write(program.read())
 
 
 def clear_program_file():
@@ -340,24 +306,6 @@ def edit_state(msg, type, addr_range):
                 break
 
 
-def set_file_line(file, index, val):
-    """
-    Sets entry inside of file at index (0 indexed) equal to val
-
-    Arguments:
-        file -- Path object representing file to write to
-        index -- int
-        val -- int
-    """
-    with open(file, "r") as f:
-        lines = f.readlines()
-
-    lines[int(index)] = binary(val) + "\n"
-
-    with open(file, "w") as f:
-        f.writelines(lines)
-
-
 def load_program():
     """
     Prompts user for program and loads into program.mem
@@ -377,9 +325,8 @@ def load_program():
     if Path("programs.json").exists():
         with open("programs.json", "r") as prog_file:
             programs = json.load(prog_file)
-        existing_progs = programs.keys()
     else:
-        existing_progs = {}
+        programs = {}
 
     # if using saved program, display options and prompt
     if selection == "1":
@@ -390,13 +337,13 @@ def load_program():
             print(b)
 
         print("\nSAVED PROGRAMS:")
-        for p in existing_progs:
+        for p in programs.keys():
             print(p)
 
         err_prompt = "Input does not match any saved programs\n" "Enter program: "
 
         prog_name = get_input(
-            valid_inputs=existing_progs | BUILTIN_PROGRAMS.keys(),
+            valid_inputs=programs.keys() | BUILTIN_PROGRAMS.keys(),
             first_prompt="\nEnter program: ",
             err_prompt=err_prompt,
         )
@@ -408,25 +355,32 @@ def load_program():
     else:
         # if using a new program, store name and path in programs.json before running
         while True:
-            selected_prog_path = Path(input("Enter path to program: "))
-            if selected_prog_path.is_file():
-                break
-            else:
-                print(f"File not found: {selected_prog_path}")
+            selected_prog_path = PROGRAMS_FOLDER_PATH / input("Enter path to program: ")
+
+            if not selected_prog_path.is_file():
+                print(f"\nFile not found: {selected_prog_path.name}\n")
+                continue
+
+            if selected_prog_path.suffix.lower() not in {".mem", ".s"}:
+                print("\nFile must end with .mem or .s\n")
+                continue
+
+            break
 
         while True:
             prog_name = input("Enter name for program: ")
-            if prog_name in existing_progs | BUILTIN_PROGRAMS.keys():
+            if prog_name in programs.keys() | BUILTIN_PROGRAMS.keys():
                 print("\nError: Name matches an existing program")
             else:
                 break
 
-        with open("programs.json", "w") as progs_json:
-            json.dump(programs, progs_json, indent=4)
+        programs[prog_name] = str(selected_prog_path)
+
+    with open("programs.json", "w") as prog_file:
+        json.dump(programs, prog_file, indent=4)
 
     # copy desired program to program.mem file
-    with open(selected_prog_path, "r") as prog_file:
-        create_program_file(prog_file)
+    create_program_file(Path(selected_prog_path))
 
     return prog_name
 
@@ -439,7 +393,7 @@ def handle_builtin(prog):
         prog -- builtin function name (str)
 
     Returns:
-        Path -- path to program's code
+        str -- path to program's code
     """
     if prog not in BUILTIN_PROGRAMS:
         print(f"Error: {prog} is not a builtin program")
@@ -447,47 +401,13 @@ def handle_builtin(prog):
 
     match (prog):
         case "multiply":
-            multiply_txt_path = Path(BUILTIN_PROGRAMS["multiply"] + ".txt")
-
-            with open(multiply_txt_path, "r") as mult_file:
-                lines = "\n".join(mult_file.readlines())
-
-            msg = (
-                "============================ MULTIPLY ============================\n"
-                f"{lines}\n\n"
-                "==================================================================\n"
-                "This program multiplies the first two words in memory "
-                "and stores the result in x3\n"
-                "To use, edit mem[0] and mem[1]"
-            )
-
-            print(msg)
-
-            mem0 = input("\nEnter value for mem[0]: ")
-            while True:
-                try:
-                    mem0 = int(mem0)
-                    break
-                except ValueError:
-                    mem0 = input("Value must be an integer: ")
-
-            mem1 = input("\nEnter value for mem[1]: ")
-            while True:
-                try:
-                    mem1 = int(mem1)
-                    break
-                except ValueError:
-                    mem1 = input("Value must be an integer: ")
-
-            set_file_line(DATA_PATH, 0, mem0)
-            set_file_line(DATA_PATH, 1, mem1)
-
-            return Path(BUILTIN_PROGRAMS["multiply"] + ".mem")
+            return BUILTIN_PROGRAMS["multiply"].load()
 
         case "fibonacci":
-            print("fibonacci not implemented")
-        case "simple_sort":
-            print("simple_sort not implemented")
+            return BUILTIN_PROGRAMS["fibonacci"].load()
+            
+        case "quick_sort":
+            return BUILTIN_PROGRAMS["quick_sort"].load()
 
 
 def clear_sim_files():
@@ -500,21 +420,6 @@ def clear_sim_files():
     clear_pc()
     clear_data()
     clear_program_file()
-
-
-def get_input(valid_inputs, first_prompt, err_prompt):
-    """
-    Gets user inputs
-
-    Arguments:
-        valid_inputs -- valid user entries (set or list of lowercase strings)
-        first_prompt, err_prompt (str)
-    """
-    selection = input(first_prompt)
-    while selection.lower() not in valid_inputs:
-        selection = input(err_prompt)
-
-    return selection
 
 
 if __name__ == "__main__":

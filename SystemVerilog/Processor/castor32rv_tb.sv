@@ -1,9 +1,11 @@
 `timescale 1 ns / 1ps
-module beaver32rv_tb;
+module castor32rv_tb;
     logic clk, rst;
     int cycles;
 
-    beaver32rv dut (
+    castor32rv # (
+        .DATA_ADDR_WIDTH(12)
+    ) dut (
         .clk(clk),
         .rst(rst)
     );
@@ -22,9 +24,9 @@ module beaver32rv_tb;
         clk = 0; #1;
         rst = 0; #1;
 
-        $readmemb("SystemVerilog/RegisterFile/reg.mem", dut.rf.registers);
-        $readmemb("SystemVerilog/DataMemory/data.mem", dut.data_mem.mem);
-        $readmemb("SystemVerilog/InstructionMemory/program.mem", dut.program_mem.mem_rom);
+        $readmemb("../SystemVerilog/RegisterFile/reg.mem", dut.rf.registers);
+        $readmemb("../SystemVerilog/DataMemory/data.mem", dut.data_mem.mem);
+        $readmemb("../SystemVerilog/InstructionMemory/program.mem", dut.program_mem.mem_rom);
 
         forever begin
             do begin
@@ -41,7 +43,7 @@ module beaver32rv_tb;
                 $finish;
             end
 
-            $readmemb("SystemVerilog/InstructionMemory/program.mem", dut.program_mem.mem_rom); #1;
+            $readmemb("../SystemVerilog/InstructionMemory/program.mem", dut.program_mem.mem_rom); #1;
 
             clk = 1; #1;
 
@@ -49,7 +51,7 @@ module beaver32rv_tb;
 
             clk = 0; #1;
 
-           pc_file = $fopen("SystemVerilog/ProgramCounter/pc.txt", "w");
+           pc_file = $fopen("../SystemVerilog/ProgramCounter/pc.txt", "w");
             if (pc_file) begin
                 $fdisplay(pc_file, "%0d", dut.pc_addr);
                 $fclose(pc_file);

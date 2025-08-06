@@ -1,5 +1,5 @@
 module DataMemory #(
-    parameter ADDR_WIDTH = 8,
+    parameter ADDR_WIDTH = 12,
     parameter DATA_WIDTH = 32
 ) (
     input logic                     clk,            
