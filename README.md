@@ -10,9 +10,9 @@ throughout program execution
 
 
 ## Example output
-<img width="750" height="723" alt="image" src="https://github.com/user-attachments/assets/d5da2821-93f9-4f88-9faa-1c4209958ea1" />
+<img width="600" height="723" alt="image" src="https://github.com/user-attachments/assets/d5da2821-93f9-4f88-9faa-1c4209958ea1" />
 
-<img width="750" height="650" alt="image" src="https://github.com/user-attachments/assets/cf716936-b896-4b82-bb07-b34e7517e55f" />
+<img width="600" height="650" alt="image" src="https://github.com/user-attachments/assets/cf716936-b896-4b82-bb07-b34e7517e55f" />
 
 ## Schematic
 ![castor32-schematic](https://github.com/user-attachments/assets/6ed8bd3a-959c-42f0-bb4a-c64ee491fddd)
