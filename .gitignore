@@ -1,9 +1,11 @@
 .DS_Store
+.vscode
+.devcontainer/
+
+programs.json
+control.txt
+
+**/beaver32rv_test
+**/__pycache__
 *.exe
 *.vcd
-.devcontainer/
-.vscode
-beaver32rv_test
-programs.json
-**/__pycache__
-control.txt

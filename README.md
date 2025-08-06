@@ -1,4 +1,4 @@
-# Castor32: A Basic RISC-V Processor
+## Castor32: A Basic RISC-V Processor
 
 This repo contains a Harvard architecture RV32I processor written in SystemVerilog and a Python CLI for simulation
 
@@ -42,7 +42,7 @@ Result:
 </pre>
 
 ### Fibonacci
-Calculates the nth number in the Fibonacci sequence and stores the result in x1  
+Calculates the nth number in the Fibonacci sequence and stores the result in a0
 <pre>
 Inputs:  
     n: mem[0] -- Fibonacci number to calculate (int)
