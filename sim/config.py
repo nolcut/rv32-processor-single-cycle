@@ -1,5 +1,5 @@
 from constants import BUILTIN_FOLDER_PATH
-from programs import Fibonacci, Multiply, QuickSort, BinarySearch
+from programs import BinarySearch, Fibonacci, Multiply, QuickSort
 from simulation import Simulation
 
 mult_desc = (
@@ -32,7 +32,7 @@ BUILTIN_PROGRAMS = {
     ),
     "bin_search": BinarySearch(
         "binary search", bin_search_desc, BUILTIN_FOLDER_PATH / "binary_search.s"
-    )
+    ),
 }
 
 simulation = Simulation()

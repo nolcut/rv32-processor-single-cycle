@@ -1,7 +1,15 @@
 from abc import ABC, abstractmethod
 from time import sleep
 
-from constants import DATA_PATH, PROG_PATH, RF_PATH, Registers, binary, get_array, get_int
+from constants import (
+    DATA_PATH,
+    PROG_PATH,
+    RF_PATH,
+    Registers,
+    binary,
+    get_array,
+    get_int,
+)
 from riscv_assembler.convert import AssemblyConverter
 
 
@@ -120,14 +128,19 @@ class QuickSort(BuiltinProgram):
         return self.path
 
     def get_data(self, arr_size):
-        print("\nEnter your array entries: ")
-        for i in range(arr_size):
-            prompt = f"mem[{i}]: "
-            err_msg = f"\nERROR: Value for mem[{i}] must be an integer\n"
+        arr = get_array(arr_size)
 
-            arr_entry = get_int(prompt, err_msg)
+        if len(arr) < arr_size:
+            print(
+                f"\nLess than {arr_size} elements entered; initializing the rest to 0"
+            )
+            arr.extend([0] * (arr_size - len(arr)))
 
-            set_file_line(DATA_PATH, i, arr_entry)
+        print(f"\n{arr}")
+        sleep(1.5)
+
+        for i in range(len(arr)):
+            set_file_line(DATA_PATH, i, arr[i])
 
     def get_registers(self):
         """Get the size of the array and store in a0"""
@@ -139,10 +152,11 @@ class QuickSort(BuiltinProgram):
         set_file_line(RF_PATH, Registers.a2, arr_size - 1)
 
         return arr_size
-    
+
 
 class BinarySearch(BuiltinProgram):
     """Binary search program"""
+
     def load(self):
         """
         Prints program, prompts user for data/registers
@@ -162,7 +176,9 @@ class BinarySearch(BuiltinProgram):
         arr = get_array(arr_size)
 
         if len(arr) < arr_size:
-            print(f"\nLess than {arr_size} elements entered; initializing the rest to 0")
+            print(
+                f"\nLess than {arr_size} elements entered; initializing the rest to 0"
+            )
             arr.extend([0] * (arr_size - len(arr)))
 
         print("\nSorting array (this is necessary for binary search)\n")
@@ -175,7 +191,7 @@ class BinarySearch(BuiltinProgram):
         sleep(2)
 
         for i in range(len(arr)):
-                set_file_line(DATA_PATH, i, arr[i])
+            set_file_line(DATA_PATH, i, arr[i])
 
     def get_registers(self):
         """Get the size of the array to sort and the element to find"""

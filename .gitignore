@@ -4,11 +4,12 @@
 
 **/data.mem
 **/pc.txt
+**/reg.mem
 **/program.mem
 **/programs.json
 **/control.txt
 
-**/beaver32rv_test
+**/castor32rv_test
 **/__pycache__
 *.exe
 *.vcd
