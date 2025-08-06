@@ -1,4 +1,4 @@
-## Castor32: A Basic RISC-V Processor
+# Castor32: A Basic RISC-V Processor
 
 This repo contains a Harvard architecture RV32I processor written in SystemVerilog and a Python CLI for simulation
 
@@ -7,6 +7,8 @@ To simulate the core, run the sim_runner.py script directly from the sim directo
 <br>
 The simulator supports batch, iterative, and prompted execution and displays register, data, and control state
 throughout program execution
+<br>  
+For the sake of readability, memory indexes in the display are assumed to be word sized. Though, the processor does support byte and halfword addressing
 
 
 ## Example output
@@ -35,8 +37,8 @@ throughout program execution
 Multiplies the first two words in memory and stores the result in x3    
 <pre>
 Inputs:
-    num1: mem[0] -- first operand (int)
-    num2: mem[1] -- second operand (int)
+    num1:   mem[0] -- first operand (int)
+    num2:   mem[1] -- second operand (int)
 Result:
     output: x3 -- multiplication result
 </pre>
@@ -45,7 +47,7 @@ Result:
 Calculates the nth number in the Fibonacci sequence and stores the result in a0
 <pre>
 Inputs:  
-    n: mem[0] -- Fibonacci number to calculate (int)
+    n:      mem[0] -- Fibonacci number to calculate (int)
 Result:  
     output: a0 (x10) -- nth Fibonacci number (int)
 </pre>
@@ -54,10 +56,21 @@ Result:
 Sorts an array in memory    
 <pre>
 Inputs:
-    size: a2 (x12) -- size of array (int)
-    arr: mem[0:size] -- array
+    size:       a2 (x12) -- size of array (int)
+    arr:        mem[0:size] -- array
 Result:
     sorted_arr: mem[0:size] -- sorted array
+</pre>
+
+### Binary search
+Finds a value in an array in O( log(n) ) time
+<pre>
+Inputs:
+    size:   a2 (x12) -- size of array (int)
+    target: a3 (x13) -- target value (int)
+    arr:    mem[0:size] -- array to search
+Result:
+    res:    a0 (x10) -- index of target or -1
 </pre>
 
 ## Adding programs
