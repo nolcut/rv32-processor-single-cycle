@@ -338,7 +338,7 @@ def load_program():
         )
 
         if prog_name not in BUILTIN_PROGRAMS:
-            selected_prog_path = programs[prog_name]
+            selected_prog_path = Path(programs[prog_name])
         else:
             selected_prog_path = handle_builtin(prog_name)
     else:
@@ -369,7 +369,7 @@ def load_program():
         json.dump(programs, prog_file, indent=4)
 
     # copy desired program to program.mem file
-    create_program_file(Path(selected_prog_path))
+    create_program_file(selected_prog_path)
 
     return prog_name
 
@@ -388,15 +388,10 @@ def handle_builtin(prog):
         print(f"Error: {prog} is not a builtin program")
         sys.exit(1)
 
-    match (prog):
-        case "multiply":
-            return BUILTIN_PROGRAMS["multiply"].load()
-
-        case "fibonacci":
-            return BUILTIN_PROGRAMS["fibonacci"].load()
-
-        case "quick_sort":
-            return BUILTIN_PROGRAMS["quick_sort"].load()
+    try:
+        return BUILTIN_PROGRAMS[prog].load()
+    except Exception as e:
+        raise RuntimeError(f"Error running builtin program: {repr(e)}")
 
 
 def clear_sim_files():

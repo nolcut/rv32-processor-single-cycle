@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
+from time import sleep
 
-from constants import DATA_PATH, PROG_PATH, RF_PATH, Registers, binary, get_int
+from constants import DATA_PATH, PROG_PATH, RF_PATH, Registers, binary, get_array, get_int
 from riscv_assembler.convert import AssemblyConverter
 
 
@@ -136,6 +137,62 @@ class QuickSort(BuiltinProgram):
         arr_size = get_int(prompt, err_msg)
 
         set_file_line(RF_PATH, Registers.a2, arr_size - 1)
+
+        return arr_size
+    
+
+class BinarySearch(BuiltinProgram):
+    """Binary search program"""
+    def load(self):
+        """
+        Prints program, prompts user for data/registers
+        and returns program name as a Path object
+        """
+
+        self.print_prog()
+
+        arr_size = self.get_registers()
+
+        self.get_data(arr_size)
+
+        return self.path
+
+    def get_data(self, arr_size):
+        """Gets array to search"""
+        arr = get_array(arr_size)
+
+        if len(arr) < arr_size:
+            print(f"\nLess than {arr_size} elements entered; initializing the rest to 0")
+            arr.extend([0] * (arr_size - len(arr)))
+
+        print("\nSorting array (this is necessary for binary search)\n")
+        sleep(1)
+
+        arr.sort()
+
+        print(f"Sorted array: {arr}\n")
+
+        sleep(2)
+
+        for i in range(len(arr)):
+                set_file_line(DATA_PATH, i, arr[i])
+
+    def get_registers(self):
+        """Get the size of the array to sort and the element to find"""
+        size_prompt = "Enter the size of the array to search: "
+        size_err_msg = "\nERROR: Value must be an integer\n"
+
+        arr_size = get_int(size_prompt, size_err_msg)
+
+        key_prompt = "Enter the value to search for: "
+        key_err_msg = "\nERROR: Value must be an integer\n"
+
+        key = get_int(key_prompt, key_err_msg)
+
+        set_file_line(RF_PATH, Registers.a0, 0)
+        set_file_line(RF_PATH, Registers.a1, 0)
+        set_file_line(RF_PATH, Registers.a2, arr_size - 1)
+        set_file_line(RF_PATH, Registers.a3, key)
 
         return arr_size
 

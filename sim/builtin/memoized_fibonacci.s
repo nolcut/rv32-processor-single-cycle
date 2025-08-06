@@ -8,7 +8,7 @@
 # credit: Christophe Gyurgyik
 
 # MAIN
-addi sp, sp, 2047
+addi sp, sp, 2044
 addi a1, x0, 0     # hardcode memory address of 'arr'.
 addi a2, x0, 100   # hardcode size of 'arr'.
 jal FIB_MEMO

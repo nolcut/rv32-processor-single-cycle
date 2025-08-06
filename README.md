@@ -3,7 +3,7 @@
 This repo contains a Harvard architecture RV32I processor written in SystemVerilog and a Python CLI for simulation
 
 ## Using
-To simulate the core, run the sim_runner.py script directly or use the provided Docker container.  
+To simulate the core, run the sim_runner.py script directly from the sim directory, or use the provided Docker container.  
 <br>
 The simulator supports batch, iterative, and prompted execution and displays register, data, and control state
 throughout program execution

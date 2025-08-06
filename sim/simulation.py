@@ -42,7 +42,7 @@ class Simulation:
         self.simulation = subprocess.Popen(
             run_cmd,
             stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
+            stderr=subprocess.DEVNULL,
             stdin=subprocess.DEVNULL,
             text=True,
         )

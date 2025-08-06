@@ -1,5 +1,5 @@
 from constants import BUILTIN_FOLDER_PATH
-from programs import Fibonacci, Multiply, QuickSort
+from programs import Fibonacci, Multiply, QuickSort, BinarySearch
 from simulation import Simulation
 
 mult_desc = (
@@ -15,6 +15,11 @@ fib_desc = (
 
 sort_desc = "This program uses quicksort to sort an array in memory\n"
 
+bin_search_desc = (
+    "This program finds an entry in an array in O(log(n)) time using binary search\n\n"
+    "and stores the index of the value in x10\n"
+)
+
 BUILTIN_PROGRAMS = {
     "multiply": Multiply(
         "multiply", mult_desc, BUILTIN_FOLDER_PATH / "multiply_words_unconditional.s"
@@ -25,6 +30,9 @@ BUILTIN_PROGRAMS = {
     "quick_sort": QuickSort(
         "quicksort", sort_desc, BUILTIN_FOLDER_PATH / "quicksort.s"
     ),
+    "bin_search": BinarySearch(
+        "binary search", bin_search_desc, BUILTIN_FOLDER_PATH / "binary_search.s"
+    )
 }
 
 simulation = Simulation()

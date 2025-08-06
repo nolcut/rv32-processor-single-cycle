@@ -5,13 +5,30 @@
 # quicksort(int arr[], int start, int end)
 # Requires: 'start' >= 0
 #           'end' < length(arr)
-#
-# credit: Christophe Gyurgyik
 
 # MAIN
 addi sp, sp, 2044
+# Store array values in contiguous memory at mem address 0x0:
+# {10, 80, 30, 90, 40, 50, 70}
+ addi a0, x0, 0
+
+ addi t0, x0, 10
+ sw t0, 0(a0)
+ addi t0, x0, 80
+ sw t0, 4(a0)
+ addi t0, x0, 30
+ sw t0, 8(a0)
+ addi t0, x0, 90
+ sw t0, 12(a0)
+ addi t0, x0, 40
+ sw t0, 16(a0)
+ addi t0, x0, 50
+ sw t0, 20(a0)
+ addi t0, x0, 70
+ sw t0, 24(a0)
 
 addi a1, x0, 0 # start
+addi a2, x0, 6 # end
 
 jal QUICKSORT
 jal EXIT

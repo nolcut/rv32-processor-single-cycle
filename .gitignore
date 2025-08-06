@@ -2,8 +2,11 @@
 .vscode
 .devcontainer/
 
-programs.json
-control.txt
+**/data.mem
+**/pc.txt
+**/program.mem
+**/programs.json
+**/control.txt
 
 **/beaver32rv_test
 **/__pycache__
