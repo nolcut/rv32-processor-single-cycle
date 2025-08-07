@@ -49,7 +49,7 @@ def get_input(valid_inputs, first_prompt, err_prompt):
     return selection
 
 
-def get_array(length):
+def get_array(length=None):
     """Gets an array supporting list comprehension"""
     safe_globals = {
         "__builtins__": None,
@@ -71,7 +71,7 @@ def get_array(length):
             result = eval(user_input, safe_globals)
             if not isinstance(result, list):
                 raise ValueError("Input must evaluate to a list.")
-            if len(result) > length:
+            if length and len(result) > length:
                 raise ValueError(f"Cannot enter more than {length} elements")
             return result
         except Exception as e:
@@ -79,9 +79,7 @@ def get_array(length):
 
 
 def get_int(prompt, err_msg):
-    """
-    Get an int from user
-    """
+    """Get an int from user"""
     while True:
         val = input(prompt)
         try:
