@@ -4,20 +4,13 @@ import sys
 from pathlib import Path
 from time import sleep
 
-from config import BUILTIN_PROGRAMS, simulation
-from constants import (
-    CONTROL_PATH,
-    DATA_ADDR_WIDTH,
-    DATA_PATH,
-    INSTRUCTION_DELAY,
-    PC_PATH,
-    PROG_PATH,
-    PROGRAMS_FOLDER_PATH,
-    RF_PATH,
-    get_input,
-)
-from programs import create_program_file, set_file_line
 from riscv_assembler.convert import AssemblyConverter
+
+from config import BUILTIN_PROGRAMS, simulation
+from constants import (CONTROL_PATH, DATA_ADDR_WIDTH, DATA_PATH,
+                       INSTRUCTION_DELAY, PC_PATH, PROG_PATH,
+                       PROGRAMS_FOLDER_PATH, RF_PATH, get_input)
+from programs import create_program_file, set_file_line
 
 
 def main():
@@ -390,7 +383,7 @@ def handle_builtin(prog):
         prog -- builtin function name (str)
 
     Returns:
-        str -- path to program's code
+        Path -- path to program's code
     """
     if prog not in BUILTIN_PROGRAMS:
         print(f"Error: {prog} is not a builtin program")

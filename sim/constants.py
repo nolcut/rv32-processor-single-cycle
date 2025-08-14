@@ -16,85 +16,7 @@ DATA_ADDR_WIDTH = 12
 INSTRUCTION_DELAY = 0.1
 
 
-def binary(num):
-    """Returns a 32-bit two's complement binary representation of num."""
-    MIN = -(2**31)
-    MAX = 2**31 - 1
-
-    try:
-        val = int(num)
-        if val < MIN or val > MAX:
-            print(f"Error: {val} is out of 32-bit signed integer bounds.")
-            return None
-        if val < 0:
-            val = (1 << 32) + val  # two's complement
-        return format(val, "032b")
-    except (ValueError, TypeError):
-        print("Error: invalid input. Expected an integer or integer string.")
-        return None
-
-
-def get_input(valid_inputs, first_prompt, err_prompt):
-    """
-    Gets user inputs
-
-    Arguments:
-        valid_inputs -- valid user entries (set or list of lowercase strings)
-        first_prompt, err_prompt (str)
-    """
-    selection = input(first_prompt)
-    while selection not in valid_inputs:
-        selection = input(err_prompt)
-
-    return selection
-
-
-def get_array(length):
-    """Gets an array supporting list comprehension"""
-    safe_globals = {
-        "__builtins__": None,
-        "range": range,
-        "len": len,
-        "abs": abs,
-        "min": min,
-        "max": max,
-        "sum": sum,
-        "random": random,
-    }
-
-    print(
-        "\nEnter your array or use Python list comprehension (e.g. [1,2,3], [random.randint(0, 5) for _ in range(3)], etc)\n" # noqa E501
-    )
-    while True:
-        user_input = input("Enter array: ")
-        try:
-            result = eval(user_input, safe_globals)
-            if not isinstance(result, list):
-                raise ValueError("Input must evaluate to a list.")
-            if len(result) > length:
-                raise ValueError(f"Cannot enter more than {length} elements")
-            return result
-        except Exception as e:
-            print(f"ERROR: {e}\n")
-
-
-def get_int(prompt, err_msg):
-    """
-    Get an int from user
-    """
-    while True:
-        val = input(prompt)
-        try:
-            val = int(val)
-            break
-        except ValueError:
-            print(err_msg)
-
-    return val
-
-
 class Registers(IntEnum):
-    # Numeric names
     x0 = 0
     x1 = 1
     x2 = 2
@@ -128,8 +50,6 @@ class Registers(IntEnum):
     x30 = 30
     x31 = 31
 
-    # ABI aliases (optional, same values)
-    zero = 0
     ra = 1
     sp = 2
     gp = 3
@@ -162,3 +82,78 @@ class Registers(IntEnum):
     t4 = 29
     t5 = 30
     t6 = 31
+
+
+def binary(num):
+    """Returns a 32-bit two's complement binary representation of num."""
+    MIN = -(2**31)
+    MAX = 2**31 - 1
+
+    try:
+        val = int(num)
+        if val < MIN or val > MAX:
+            print(f"Error: {val} is out of 32-bit signed integer bounds.")
+            return None
+        if val < 0:
+            val = (1 << 32) + val  # two's complement
+        return format(val, "032b")
+    except (ValueError, TypeError):
+        print("Error: invalid input. Expected an integer or integer string.")
+        return None
+
+
+def get_input(valid_inputs, first_prompt, err_prompt):
+    """
+    Gets user inputs
+
+    Arguments:
+        valid_inputs -- valid user entries (set or list of lowercase strings)
+        first_prompt, err_prompt (str)
+    """
+    selection = input(first_prompt)
+    while selection not in valid_inputs:
+        selection = input(err_prompt)
+
+    return selection
+
+
+def get_array(length=None):
+    """Gets an array supporting list comprehension"""
+    safe_globals = {
+        "__builtins__": None,
+        "range": range,
+        "len": len,
+        "abs": abs,
+        "min": min,
+        "max": max,
+        "sum": sum,
+        "random": random,
+    }
+
+    print(
+        "\nEnter your array or use Python list comprehension (e.g. [1,2,3], [random.randint(0, 5) for _ in range(3)], etc)\n"  # noqa E501
+    )
+    while True:
+        user_input = input("Enter array: ")
+        try:
+            result = eval(user_input, safe_globals)
+            if not isinstance(result, list):
+                raise ValueError("Input must evaluate to a list.")
+            if length and len(result) > length:
+                raise ValueError(f"Cannot enter more than {length} elements")
+            return result
+        except Exception as e:
+            print(f"ERROR: {e}\n")
+
+
+def get_int(prompt, err_msg):
+    """Get an int from user"""
+    while True:
+        val = input(prompt)
+        try:
+            val = int(val)
+            break
+        except ValueError:
+            print(err_msg)
+
+    return val

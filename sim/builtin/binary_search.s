@@ -10,6 +10,8 @@
 # Requires: r >= l. Returns -1 otherwise. 'arr' is in sequential order.
 #           l >= 0.
 #           r < length(arr).
+#
+# credit: Christophe Gyurgyik
 
 # MAIN
 addi sp, sp, 2044
