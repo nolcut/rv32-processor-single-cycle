@@ -89,7 +89,7 @@ To simulate using the docker container, run:
 ```
 In order to run local programs, you need to mount your filesystem to the /sim/programs folder inside of the container using the -v flag  
 
-For example, to make your current working directory accesible (using a Posix shell), run:
+For example, to make your current working directory accesible (using a POSIX shell), run:
 ```
 >> docker run -it -v $(pwd):/sim/programs nolcut/castor32
 ```
@@ -125,4 +125,4 @@ Or [see here](https://steveicarus.github.io/iverilog/usage/installation.html)
 
 Thank you to Christophe Gyurgyik for allowing me to include his [assembly programs](https://github.com/cgyurgyik/riscv-assembly)
 <br>  
-The design of this processor was loosely based off the architecture featured in Hennesey and Patterson's Computer Orginization and Design
+The design of this processor was loosely based off the architecture featured in Hennesey and Patterson's Computer Organization and Design

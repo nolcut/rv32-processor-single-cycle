@@ -30,7 +30,7 @@ class BuiltinProgram(ABC):
             lines = "\n".join(prog_file.readlines())
 
         msg = (
-            f"============================ {self.name.upper()} ============================\n"  # # noqa: E501
+            f"============================ {self.name.upper()} ============================\n"  # noqa: E501
             f"{lines}\n\n"
         )
 
@@ -71,7 +71,7 @@ class Multiply(BuiltinProgram):
             mem1 = get_int(mem1_prompt, mem1_err)
 
             if mem1 < 0:
-                print("\nERROR: Operand 2 must be a positive\n")
+                print("\nERROR: Operand 2 must be a positive integer\n")
             else:
                 break
 
@@ -97,7 +97,7 @@ class Fibonacci(BuiltinProgram):
             n = get_int(prompt, err_msg)
 
             if n < 0:
-                print("\nERROR: n must be a positive\n")
+                print("\nERROR: n must be a positiv integer\n")
             else:
                 break
 

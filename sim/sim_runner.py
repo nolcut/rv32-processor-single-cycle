@@ -163,7 +163,7 @@ def run_iteration():
 def more_lines(line_num):
     """
     Returns whether or not the current line
-    inside of program.mem number is valid
+    is a valid line number inside of program.mem
     """
     if line_num == float("inf"):
         return False

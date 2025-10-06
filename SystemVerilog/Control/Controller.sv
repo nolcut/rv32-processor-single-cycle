@@ -25,8 +25,8 @@ module Controller
             7'b1100011: controls = 12'b000001000001; // branch-format
             7'b1101111: controls = 12'b111000100000; // jal-format 
             7'b1100111: controls = 12'b111000010000; // jalr-format
-            7'b0110111: controls = 12'b101000001000; // lui (need to test)
-            7'b0010111: controls = 12'b101000000100; // auipc (need to test)
+            7'b0110111: controls = 12'b101000001000; // lui
+            7'b0010111: controls = 12'b101000000100; // auipc
             default: controls = 12'bx;
         endcase
     end
