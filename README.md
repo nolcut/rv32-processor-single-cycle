@@ -121,12 +121,6 @@ APT install:
 ```  
 Or [see here](https://steveicarus.github.io/iverilog/usage/installation.html)    
 
-## To-do
-* [ ] 5-stage pipeline
-* [ ] Caching
-* [ ] Branch prediction (starting with always takes)
-* [ ] ECALL/EBREAK
-
 ## Acknowledgements
 
 Thank you to Christophe Gyurgyik for allowing me to include his [assembly programs](https://github.com/cgyurgyik/riscv-assembly)
